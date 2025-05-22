@@ -1,10 +1,21 @@
+using greenfil_backend.Models;
 using Greenfil.Backend.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();  // Necesario para los controladores API
-builder.Services.AddEndpointsApiExplorer();  // Necesario para Swagger
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });builder.Services.AddEndpointsApiExplorer();  // Necesario para Swagger
+
+builder.Services.AddDbContext<GreenfilContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    ));
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Greenfil API", Version = "v1" });
