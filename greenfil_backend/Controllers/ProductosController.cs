@@ -1,4 +1,5 @@
 using greenfil_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,7 @@ namespace greenfil_backend.Controllers
 
         // POST: api/Productos
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<producto>> PostProducto(producto producto)
         {
             _context.productos.Add(producto);
@@ -48,6 +50,7 @@ namespace greenfil_backend.Controllers
 
         // PUT: api/Productos/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutProducto(int id, producto producto)
         {
             if (id != producto.Id)
@@ -78,6 +81,7 @@ namespace greenfil_backend.Controllers
 
         // DELETE: api/Productos/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteProducto(int id)
         {
             var producto = await _context.productos.FindAsync(id);

@@ -1,4 +1,5 @@
 using Greenfil.Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Greenfil.Backend.Controllers;

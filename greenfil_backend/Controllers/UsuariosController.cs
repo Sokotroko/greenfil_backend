@@ -1,4 +1,7 @@
+using greenfil_backend.DTOs;
 using greenfil_backend.Models;
+using Greenfil.Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +12,12 @@ namespace greenfil_backend.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly GreenfilContext _context;
+        private readonly PasswordService _passwordService;
 
-        public UsuariosController(GreenfilContext context)
+        public UsuariosController(GreenfilContext context, PasswordService passwordService)
         {
             _context = context;
+            _passwordService = passwordService;
         }
 
         // GET: api/Usuarios
@@ -39,18 +44,50 @@ namespace greenfil_backend.Controllers
             return usuario;
         }
 
-        // POST: api/Usuarios
+        // POST: api/Usuarios  -  se agrego cifrado de contraseñas
         [HttpPost]
-        public async Task<ActionResult<usuario>> PostUsuario(usuario usuario)
+        public async Task<ActionResult<usuario>> Postusuario(usuario nuevo)
         {
-            _context.usuarios.Add(usuario);
+            // Verifica que el email o usuario no existan
+            var existe = await _context.usuarios.AnyAsync(u => u.Email == nuevo.Email);
+            if (existe)
+                return BadRequest("El correo ya está en uso.");
+
+            // Hashear la contraseña antes de guardar
+            nuevo.PasswordHash = _passwordService.HashPassword(nuevo.PasswordHash);
+
+            _context.usuarios.Add(nuevo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
+            return CreatedAtAction("Getusuario", new { id = nuevo.Id }, nuevo);
         }
+        
+        //login para contraseñas hasheadas
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginCliente([FromBody] LoginDto dto)
+        {
+            var user = await _context.usuarios.FirstOrDefaultAsync(u => u.Email == dto.Email);
 
+            if (user == null)
+                return Unauthorized("Correo no encontrado.");
+
+            var passwordOk = _passwordService.VerifyPassword(user.PasswordHash, dto.Password);
+
+            if (!passwordOk)
+                return Unauthorized("Contraseña incorrecta.");
+
+            return Ok(new
+            {
+                id = user.Id,
+                nombreUsuario = user.NombreUsuario,
+                email = user.Email,
+                puntos = user.Puntos
+            });
+        }
+        
         // PUT: api/Usuarios/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutUsuario(int id, usuario usuario)
         {
             if (id != usuario.Id)
@@ -81,6 +118,7 @@ namespace greenfil_backend.Controllers
 
         // DELETE: api/Usuarios/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
             var usuario = await _context.usuarios.FindAsync(id);

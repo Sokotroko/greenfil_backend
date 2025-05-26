@@ -1,5 +1,6 @@
 
 using greenfil_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,7 @@ namespace greenfil_backend.Controllers
 
         // POST: api/Modelo3D
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<modelo3d>> PostModelo(modelo3d modelo)
         {
             _context.modelo3ds.Add(modelo);
@@ -53,6 +55,7 @@ namespace greenfil_backend.Controllers
 
         // PUT: api/Modelo3D/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutModelo(int id, modelo3d modelo)
         {
             if (id != modelo.Id)
@@ -83,6 +86,7 @@ namespace greenfil_backend.Controllers
 
         // DELETE: api/Modelo3D/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteModelo(int id)
         {
             var modelo = await _context.modelo3ds.FindAsync(id);

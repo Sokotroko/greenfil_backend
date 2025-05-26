@@ -26,6 +26,8 @@ public partial class GreenfilContext : DbContext
 
     public virtual DbSet<usuario> usuarios { get; set; }
 
+    public virtual DbSet<usuariosback> usuariosbacks { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;user=root;password=12345678;database=Greenfil", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.42-mysql"));
@@ -84,6 +86,13 @@ public partial class GreenfilContext : DbContext
 
             entity.Property(e => e.FechaRegistro).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.Puntos).HasDefaultValueSql("'0'");
+        });
+
+        modelBuilder.Entity<usuariosback>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.Property(e => e.Rol).HasDefaultValueSql("'admin'");
         });
 
         OnModelCreatingPartial(modelBuilder);

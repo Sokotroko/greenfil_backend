@@ -1,5 +1,6 @@
 
 using greenfil_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,7 @@ namespace greenfil_backend.Controllers
 
         // POST: api/DetallePedido
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<detallepedido>> PostDetallePedido(detallepedido detalle)
         {
             _context.detallepedidos.Add(detalle);
@@ -55,6 +57,7 @@ namespace greenfil_backend.Controllers
 
         // PUT: api/DetallePedido/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutDetallePedido(int id, detallepedido detalle)
         {
             if (id != detalle.Id)
@@ -85,6 +88,7 @@ namespace greenfil_backend.Controllers
 
         // DELETE: api/DetallePedido/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteDetallePedido(int id)
         {
             var detalle = await _context.detallepedidos.FindAsync(id);
