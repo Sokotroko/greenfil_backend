@@ -25,6 +25,8 @@ public partial class usuario
 
     [Column(TypeName = "datetime")]
     public DateTime FechaRegistro { get; set; }
+    
+    public string Rol { get; set; } 
 
     [InverseProperty("Usuario")]
     public virtual ICollection<modelo3d> modelo3ds { get; set; } = new List<modelo3d>();

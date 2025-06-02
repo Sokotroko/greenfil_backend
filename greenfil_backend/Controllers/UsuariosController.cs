@@ -1,4 +1,6 @@
 using greenfil_backend.Models;
+using greenfil_backend.DTOs;
+using Greenfil.Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +11,12 @@ namespace greenfil_backend.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly GreenfilContext _context;
+        private readonly JwtService _jwtService;
 
-        public UsuariosController(GreenfilContext context)
+        public UsuariosController(GreenfilContext context, JwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
         }
 
         // GET: api/Usuarios
@@ -41,12 +45,22 @@ namespace greenfil_backend.Controllers
 
         // POST: api/Usuarios
         [HttpPost]
-        public async Task<ActionResult<usuario>> PostUsuario(usuario usuario)
+        public async Task<ActionResult<UsuarioRespuestaDTO>> PostUsuario(usuario usuario)
         {
             _context.usuarios.Add(usuario);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
+            var token = _jwtService.GenerateToken(usuario);
+
+            var respuesta = new UsuarioRespuestaDTO
+            {
+                NombreUsuario = usuario.NombreUsuario,
+                Email = usuario.Email,
+                Rol = usuario.Rol,
+                Token = token
+            };
+
+            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, respuesta);
         }
 
         // PUT: api/Usuarios/5
