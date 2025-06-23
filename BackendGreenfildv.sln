@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendGreenfildv", "BackendGreenfildv\BackendGreenfildv.csproj", "{13369308-46D5-4FAC-AA66-F4C83373B487}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendGreenfil.Persistence", "BackendGreenfil.Persistence\BackendGreenfil.Persistence.csproj", "{2F7C1552-33C8-4DF4-8CB0-577FC40421DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{13369308-46D5-4FAC-AA66-F4C83373B487}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13369308-46D5-4FAC-AA66-F4C83373B487}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13369308-46D5-4FAC-AA66-F4C83373B487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7C1552-33C8-4DF4-8CB0-577FC40421DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7C1552-33C8-4DF4-8CB0-577FC40421DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7C1552-33C8-4DF4-8CB0-577FC40421DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7C1552-33C8-4DF4-8CB0-577FC40421DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
